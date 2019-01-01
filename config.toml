@@ -1,3 +1,18 @@
 baseURL = "https://simorgh3196.github.io/"
 languageCode = "ja"
 title = "simorgh3196's blog"
+theme = "hello-friend"
+copyright = "Copyright © 2019 simorgh3196 <image src=\"/img/sim_logo_mini.png\" style=\"width: 30px; height: 30px; margin-left: 8px;\">"
+paginate = 5
+
+[params]
+  defaultTheme = "light"
+
+[params.logo]
+  logoText = "simorgh3196's blog"
+
+[menu]
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about"
