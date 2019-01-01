@@ -13,10 +13,10 @@ jobs:
             git submodule update --init
             hugo --minify
             mkdir ~/public
-            cp -r ~/hugo/public/ ~/public
+            cp -r ~/hugo/public/* ~/public
             git checkout master
             rm -rf ~/hugo/*
-            cp -r ~/public/ ~/hugo/
+            cp -r ~/public/* ~/hugo/
             ls ~/public
             ls ~/hugo
             git config --global user.name ${GITHUB_USER_NAME}
