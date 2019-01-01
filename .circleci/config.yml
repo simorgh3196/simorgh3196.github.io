@@ -1,66 +1,23 @@
 version: 2
 
 jobs:
-  checkout_code:
-    docker:
-      - image: cibuilds/hugo:latest
-    working_directory: ~/hugo
-    steps:
-      - run:
-          command: |
-            chmod -R 777 ~/hugo
-      - checkout
-      - save_cache:
-          key: hugo-cache-{{ epoch }}
-          paths:
-            - ~/hugo
-
   build:
     docker:
       - image: cibuilds/hugo:latest
     working_directory: ~/hugo
     steps:
-      - restore_cache:
-          key: hugo-cache
+      - checkout
       - run:
           command: |
             git submodule sync
             git submodule update --init
             hugo --minify
-            chmod -R 777 ~/hugo/public
-      - save_cache:
-          key: hugo-cache-public-{{ epoch }}
-          paths:
-            - ~/hugo/public
-
-  deploy:
-    machine:
-      enabled: true
-    working_directory: ~/hugo
-    steps:
-      - restore_cache:
-          key: hugo-cache
-      - restore_cache:
-          key: hugo-cache-public
-      - run:
-          command: |
+            cp -r ~/hugo/public/ ~/tmp/public
+            git checkout master
+            rm -r ~/hugo/*
+            cp ~/tmp/public/ ~/hugo/
             git config --global user.name ${GITHUB_USER_NAME}
             git config --global user.email ${GITHUB_USER_MAIL}
-            git checkout master
-            git rm -r *
-            cp ~/hugo/public/ ~/hugo/
             git add -A
             git commit -m "push by circle ci"
             git push origin master
-
-workflows:
-  version: 2
-  build_and_deploy:
-    jobs:
-      - checkout_code
-      - build:
-          requires:
-            - checkout_code
-      - deploy:
-          requires:
-            - build
