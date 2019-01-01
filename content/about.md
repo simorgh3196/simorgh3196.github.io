@@ -21,3 +21,8 @@ Swiftはバージョン1.1くらいから触ってます。
 
 アーキテクチャに関心があり、 `CleanArchitecture` や `MVVM` などの実装を用いたiOSアプリ開発経験があります。
 
+## Link
+
+* [GitHub](https://github.com/simorgh3196)
+* [Twitter](https://twitter.com/simorgh3196)
+
