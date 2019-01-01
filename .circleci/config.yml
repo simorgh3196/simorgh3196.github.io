@@ -1,38 +1,6 @@
 version: 2
 
 jobs:
-  checkout_code:
-    docker:
-      - image: cibuilds/hugo:latest
-    working_directory: ~/hugo
-    steps:
-      - run:
-          command: |
-            chmod -R 777 ~/hugo
-      - checkout
-      - save_cache:
-          key: hugo-cache-{{ epoch }}
-          paths:
-            - ~/hugo
-
-  textlint:
-    docker:
-      - image: circleci/node:9.2.0
-    working_directory: ~/hugo/.circleci
-    steps:
-      - restore_cache:
-          keys:
-            - hugo-cache
-            - hugo-nodemodules-{{ checksum "package.json" }}
-      - run:
-          command: |
-            npm install
-            npm run textlint "./content/**/*.md"
-      - save_cache:
-          key: hugo-nodemodules-{{ checksum "package.json" }}
-          paths:
-            - ~/hugo/.circleci/node_modules
-
   build:
     docker:
       - image: cibuilds/hugo:latest
@@ -45,17 +13,20 @@ jobs:
             git submodule sync
             git submodule update --init
             hugo --minify
-            mkdir -p ~/tmp/public
-            cp -r ~/hugo/public ~/tmp/public
+            mkdir -p ~/public
+            chmod -R 777 ~/public
+            cp -r ~/hugo/public ~/public
       - save_cache:
           key: hugo-cache-public-{{ epoch }}
           paths:
-            - ~/tmp/public
+            - ~/public
 
   deploy:
+    docker:
+      - image: cibuilds/hugo:latest
+    working_directory: ~/hugo
     machine:
       enabled: true
-    working_directory: ~/hugo
     steps:
       - restore_cache:
           key: hugo-cache-public
@@ -65,7 +36,7 @@ jobs:
             git config --global user.email ${GITHUB_USER_MAIL}
             git checkout master
             git rm -r *
-            cp ~/tmp/public/ .
+            cp ~/public/ .
             git add -A
             git commit -m "push by circle ci"
             git push origin master
@@ -74,20 +45,13 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - checkout_code
-      - textlint:
-          filters:
-            branches:
-              ignore: master
-          requires:
-            - checkout_code
+      - checkout
       - build:
           requires:
-            - checkout_code
+            - checkout
       - deploy:
           filters:
             branches:
               only: write
           requires:
-            - textlint
             - build
