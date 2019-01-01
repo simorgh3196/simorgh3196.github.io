@@ -6,6 +6,9 @@ jobs:
       - image: cibuilds/hugo:latest
     working_directory: ~/hugo
     steps:
+      - run:
+          command: |
+            chmod -R 777 ~/hugo
       - checkout
       - save_cache:
           key: hugo-cache-{{ epoch }}
