@@ -89,7 +89,7 @@ workflows:
       - deploy:
           filters:
             branches:
-              only: master
+              only: write
           requires:
             - textlint
             - build
