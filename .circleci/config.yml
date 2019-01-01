@@ -1,10 +1,21 @@
 version: 2
+docker:
+  - image: cibuilds/hugo:latest
+working_directory: ~/hugo
 
 jobs:
+  checkout_code:
+    steps:
+      - run:
+          command: |
+            chmod -R 777 ~/hugo
+      - checkout
+      - save_cache:
+          key: hugo-cache-{{ epoch }}
+          paths:
+            - ~/hugo
+
   build:
-    docker:
-      - image: cibuilds/hugo:latest
-    working_directory: ~/hugo
     steps:
       - restore_cache:
           key: hugo-cache
@@ -22,9 +33,6 @@ jobs:
             - ~/public
 
   deploy:
-    docker:
-      - image: cibuilds/hugo:latest
-    working_directory: ~/hugo
     machine:
       enabled: true
     steps:
@@ -44,14 +52,14 @@ jobs:
 workflows:
   version: 2
   build_and_deploy:
+    filters:
+      branches:
+        only: write
     jobs:
-      - checkout
+      - checkout_code
       - build:
           requires:
-            - checkout
+            - checkout_code
       - deploy:
-          filters:
-            branches:
-              only: write
           requires:
             - build
