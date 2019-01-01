@@ -1,0 +1,95 @@
+version: 2
+
+jobs:
+  checkout_code:
+    docker:
+      - image: cibuilds/hugo:latest
+    working_directory: ~/hugo
+    steps:
+      - checkout
+      - save_cache:
+          key: hugo-cache-{{ epoch }}
+          paths:
+            - ~/hugo
+
+  textlint:
+    docker:
+      - image: circleci/node:9.2.0
+    working_directory: ~/hugo/.circleci
+    steps:
+      - restore_cache:
+          keys:
+            - hugo-cache
+            - hugo-nodemodules-{{ checksum "package.json" }}
+      - run:
+          command: |
+            npm install
+            npm run textlint "./content/**/*.md"
+      - save_cache:
+          key: hugo-nodemodules-{{ checksum "package.json" }}
+          paths:
+            - ~/hugo/.circleci/node_modules
+
+  build:
+    docker:
+      - image: cibuilds/hugo:latest
+    working_directory: ~/hugo
+    steps:
+      - restore_cache:
+          key: hugo-cache
+      - run:
+          command: |
+            git submodule sync
+            git submodule update --init
+            hugo --minify
+            mkdir -p ~/tmp/public
+            cp -r ~/hugo/public ~/tmp/public
+
+
+            git clone https://github.com/chroju/chroju.github.io public
+            rm -rf public/*
+            sudo cp /usr/share/zoneinfo/Japan /etc/localtime
+            hugo
+      - save_cache:
+          key: hugo-cache-public-{{ epoch }}
+          paths:
+            - ~/tmp/public
+
+  deploy:
+    machine:
+      enabled: true
+    working_directory: ~/hugo
+    steps:
+      - restore_cache:
+          key: hugo-cache-public
+      - run:
+          command: |
+            git config --global user.name ${GITHUB_USER_NAME}
+            git config --global user.email ${GITHUB_USER_MAIL}
+            git checkout master
+            git rm -r *
+            cp ~/tmp/public/ .
+            git add -A
+            git commit -m "push by circle ci"
+            git push origin master
+
+workflows:
+  build_and_deploy:
+    jobs:
+      - checkout_code
+      - textlint:
+          filters:
+            branches:
+              ignore: master
+          requires:
+            - checkout_code
+      - build:
+          requires:
+            - checkout_code
+      - deploy:
+          filters:
+            branches:
+              only: master
+          requires:
+            - textlint
+            - build
