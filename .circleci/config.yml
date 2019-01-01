@@ -12,11 +12,11 @@ jobs:
             git submodule sync
             git submodule update --init
             hugo --minify
-            mkdir -p ~/tmp/public
-            cp -r ~/hugo/public/ ~/tmp/public
+            mkdir ~/public
+            cp -r ~/hugo/public/ ~/public
             git checkout master
-            rm -r ~/hugo/*
-            cp ~/tmp/public/ ~/hugo/
+            rm -rf ~/hugo/*
+            cp ~/public/ ~/hugo/
             git config --global user.name ${GITHUB_USER_NAME}
             git config --global user.email ${GITHUB_USER_MAIL}
             git add -A
