@@ -21,4 +21,4 @@ jobs:
             git config --global user.email ${GITHUB_USER_MAIL}
             git add -A
             git commit -m "push by circle ci"
-            git push origin master
+            git push q https://${GITHUB_ACCESS_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git master
