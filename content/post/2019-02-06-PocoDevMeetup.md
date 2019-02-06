@@ -4,7 +4,11 @@ date: 2019-02-06T13:26:18+09:00
 author: "simorgh3196"
 cover: ""
 description: >
+  ## Poco Dev Meetup とは
 
+  - [connpass](https://dena.connpass.com/event/115277/)
+
+  Pococha（[iOS](https://itunes.apple.com/jp/app/%E8%83%A9%E3%82%A4%E3%83%96%E9%85%8D%E4%BF%A1%E3%82%A2%E3%83%97%E3%83%AA-pococha-live/id1175969205?mt=8)/[Android](https://play.google.com/store/apps/details?id=com.dena.pokota&hl=ja)） というライブ配信サービスを提供しているエンジニアがライブ配信サービスの開発にまつわる発表を行う勉強会に参加してきました。
 tags: ["勉強会", "日常"]
 draft: false
 ---
@@ -15,7 +19,7 @@ draft: false
 
 - [connpass](https://dena.connpass.com/event/115277/)
 
-Pococha（[iOS](https://itunes.apple.com/jp/app/%E8%83%A9%E3%82%A4%E3%83%96%E9%85%8D%E4%BF%A1%E3%82%A2%E3%83%97%E3%83%AA-pococha-live/id1175969205?mt=8)/[Android](https://play.google.com/store/apps/details?id=com.dena.pokota&hl=ja)） というライブ配信サービスを提供しているエンジニアがライブ配信サービスの開発にまつわる発表を行う勉強会です。
+Pococha（[iOS](https://itunes.apple.com/jp/app/%E8%83%A9%E3%82%A4%E3%83%96%E9%85%8D%E4%BF%A1%E3%82%A2%E3%83%97%E3%83%AA-pococha-live/id1175969205?mt=8)/[Android](https://play.google.com/store/apps/details?id=com.dena.pokota&hl=ja)） というライブ配信サービスを提供しているエンジニアがライブ配信サービスの開発にまつわる発表を行う勉強会に参加してきました。
 定期的に開催していくとのことですが、今回は記念すべき第一回の開催でした。
 
 ## 参加理由
